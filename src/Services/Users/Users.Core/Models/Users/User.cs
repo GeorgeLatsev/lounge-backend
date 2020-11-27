@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using Lounge.Services.Users.Models.PrivateRooms;
+using Lounge.Services.Users.Core.Models.PrivateRooms;
 
-namespace Lounge.Services.Users.Models.Users
+namespace Lounge.Services.Users.Core.Models.Users
 {
     public class User
     {

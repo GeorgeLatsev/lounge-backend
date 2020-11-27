@@ -5,4 +5,9 @@
     <RootNamespace>Lounge.Services.Users.Services</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Users.Infrastructure\Users.Infrastructure.csproj" />
+    <ProjectReference Include="..\Users.Models\Users.Models.csproj" />
+  </ItemGroup>
+
 </Project>

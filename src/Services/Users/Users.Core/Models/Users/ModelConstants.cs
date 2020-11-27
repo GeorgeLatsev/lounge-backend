@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualBasic.CompilerServices;
-
-namespace Lounge.Services.Users.Models.Users
+﻿namespace Lounge.Services.Users.Core.Models.Users
 {
     public class ModelConstants
     {

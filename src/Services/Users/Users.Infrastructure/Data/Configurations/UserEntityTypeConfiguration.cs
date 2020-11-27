@@ -1,7 +1,7 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Core.Models.Users;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Lounge.Services.Users.Models.Users.ModelConstants.User;
+using static Lounge.Services.Users.Core.Models.Users.ModelConstants.User;
 
 namespace Lounge.Services.Users.Infrastructure.Data.Configurations
 {

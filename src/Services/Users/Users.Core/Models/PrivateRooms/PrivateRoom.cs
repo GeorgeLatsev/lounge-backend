@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Lounge.Services.Users.Models.PrivateRooms
+namespace Lounge.Services.Users.Core.Models.PrivateRooms
 {
     public class PrivateRoom
     {
