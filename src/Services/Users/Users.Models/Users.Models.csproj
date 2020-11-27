@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
-    <RootNamespace>Lounge.Services.Users.Domain</RootNamespace>
+    <RootNamespace>Lounge.Services.Users.Models</RootNamespace>
   </PropertyGroup>
 
 </Project>
