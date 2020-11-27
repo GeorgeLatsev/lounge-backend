@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
-namespace Users.API
+namespace Lounge.Services.Users.API
 {
     public class Program
     {
