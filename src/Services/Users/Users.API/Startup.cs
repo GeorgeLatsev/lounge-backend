@@ -4,6 +4,7 @@ using System.Reflection;
 using Lounge.BuildingBlocks.EventBusRabbitMQ;
 using Lounge.BuildingBlocks.IntegrationEventLogEF;
 using Lounge.BuildingBlocks.IntegrationEventLogEF.Services;
+using Lounge.Services.Users.API.Infrastructure.Services;
 using Lounge.Services.Users.Infrastructure.Data;
 using Lounge.Services.Users.Infrastructure.IntegrationEvents;
 using Microsoft.AspNetCore.Builder;
@@ -88,6 +89,9 @@ namespace Lounge.Services.Users.API
 
                 return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
             });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IIdentityService, IdentityService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
