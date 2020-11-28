@@ -1,4 +1,4 @@
-﻿using Lounge.Services.Users.Core.Models.PrivateRooms;
+﻿using Lounge.Services.Users.Models.PrivateRooms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,6 +1,6 @@
-﻿using Lounge.Services.Users.Core.Models.Users;
+﻿using Lounge.Services.Users.Models.Users;
 
-namespace Lounge.Services.Users.Core.Models.PrivateRooms
+namespace Lounge.Services.Users.Models.PrivateRooms
 {
     public class Member
     {

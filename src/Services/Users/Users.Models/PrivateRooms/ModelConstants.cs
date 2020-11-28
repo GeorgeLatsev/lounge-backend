@@ -1,4 +1,4 @@
-﻿namespace Lounge.Services.Users.Core.Models.PrivateRooms
+﻿namespace Lounge.Services.Users.Models.PrivateRooms
 {
     public class ModelConstants
     {

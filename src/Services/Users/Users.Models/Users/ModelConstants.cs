@@ -1,4 +1,4 @@
-﻿namespace Lounge.Services.Users.Core.Models.Users
+﻿namespace Lounge.Services.Users.Models.Users
 {
     public class ModelConstants
     {
