@@ -1,21 +1,14 @@
-using System;
-using System.Data.Common;
-using System.Reflection;
-using Lounge.BuildingBlocks.EventBusRabbitMQ;
-using Lounge.BuildingBlocks.IntegrationEventLogEF;
-using Lounge.BuildingBlocks.IntegrationEventLogEF.Services;
-using Lounge.Services.Users.API.Infrastructure.Services;
-using Lounge.Services.Users.Infrastructure.Data;
-using Lounge.Services.Users.Infrastructure.IntegrationEvents;
+using Autofac;
+using Autofac.Extensions.DependencyInjection;
+using HealthChecks.UI.Client;
+using Lounge.Services.Users.API.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using RabbitMQ.Client;
+using System;
 
 namespace Lounge.Services.Users.API
 {
@@ -28,89 +21,48 @@ namespace Lounge.Services.Users.API
 
         public IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<UsersContext>(options =>
-                {
-                    options.UseSqlServer(Configuration["ConnectionString"],
-                         sqlOptions =>
-                        {
-                            sqlOptions.MigrationsAssembly(typeof(UsersContext).GetTypeInfo().Assembly.GetName().Name);
-                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                        });
-                },
-                ServiceLifetime.Scoped
-            );
+            services
+                .AddCustomMvc()
+                .AddCustomDbContext(Configuration)
+                .AddCustomAuthentication(Configuration)
+                .AddCustomIntegrations(Configuration)
+                .AddEventBus(Configuration)
+                .AddHealthChecks(Configuration);
 
-            services.AddDbContext<IntegrationEventLogContext>(options =>
-                {
-                    options.UseSqlServer(Configuration["ConnectionString"],
-                        sqlOptions =>
-                        {
-                            sqlOptions.MigrationsAssembly(typeof(UsersIntegrationEventService).GetTypeInfo().Assembly.GetName().Name);
-                            sqlOptions.EnableRetryOnFailure(maxRetryCount: 15, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                        });
-                },
-                ServiceLifetime.Scoped
-            );
+            var container = new ContainerBuilder();
+            container.Populate(services);
 
-            services.AddTransient<Func<DbConnection, IIntegrationEventLogService>>(
-                sp => (DbConnection c) => new IntegrationEventLogService(c));
-
-            services.AddTransient<IUsersIntegrationEventService, UsersIntegrationEventService>();
-
-            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
-            {
-                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
-
-                var factory = new ConnectionFactory()
-                {
-                    HostName = Configuration["EventBusConnection"],
-                    DispatchConsumersAsync = true
-                };
-
-                if (!string.IsNullOrEmpty(Configuration["EventBusUserName"]))
-                {
-                    factory.UserName = Configuration["EventBusUserName"];
-                }
-
-                if (!string.IsNullOrEmpty(Configuration["EventBusPassword"]))
-                {
-                    factory.Password = Configuration["EventBusPassword"];
-                }
-
-                var retryCount = 5;
-                if (!string.IsNullOrEmpty(Configuration["EventBusRetryCount"]))
-                {
-                    retryCount = int.Parse(Configuration["EventBusRetryCount"]);
-                }
-
-                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
-            });
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddTransient<IIdentityService, IdentityService>();
+            return new AutofacServiceProvider(container.Build());
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UserCustomPathBase(Configuration, loggerFactory);
 
             app.UseRouting();
+            app.UseCors("CorsPolicy");
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
+                endpoints.MapDefaultControllerRoute();
+                endpoints.MapControllers();
+                endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
-                    await context.Response.WriteAsync("Hello World!");
+                    Predicate = _ => true,
+                    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                });
+                endpoints.MapHealthChecks("/liveness", new HealthCheckOptions
+                {
+                    Predicate = r => r.Name.Contains("self")
                 });
             });
+
+            app.ConfigureEventBus();
         }
     }
 }
