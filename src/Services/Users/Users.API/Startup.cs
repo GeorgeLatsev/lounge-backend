@@ -1,5 +1,4 @@
 using Autofac;
-using Autofac.Extensions.DependencyInjection;
 using HealthChecks.UI.Client;
 using Lounge.Services.Users.API.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -8,7 +7,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
 namespace Lounge.Services.Users.API
 {
@@ -21,7 +19,7 @@ namespace Lounge.Services.Users.API
 
         public IConfiguration Configuration { get; }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services
                 .AddCustomMvc()
@@ -30,11 +28,11 @@ namespace Lounge.Services.Users.API
                 .AddCustomIntegrations(Configuration)
                 .AddEventBus(Configuration)
                 .AddHealthChecks(Configuration);
+        }
 
-            var container = new ContainerBuilder();
-            container.Populate(services);
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
 
-            return new AutofacServiceProvider(container.Build());
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

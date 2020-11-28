@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Lounge.BuildingBlocks.EventBus.Abstractions;
+﻿using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.BuildingBlocks.EventBus.Events;
 using Lounge.BuildingBlocks.IntegrationEventLogEF.Services;
 using Lounge.BuildingBlocks.IntegrationEventLogEF.Utilities;
 using Lounge.Services.Users.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Data.Common;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Lounge.Services.Users.Infrastructure.IntegrationEvents
 {
@@ -40,7 +38,7 @@ namespace Lounge.Services.Users.Infrastructure.IntegrationEvents
         {
             try
             {
-                _logger.LogInformation("----- Publishing integration event: {IntegrationEventId_published} - ({@IntegrationEvent})", evt.Id, evt);
+                _logger.LogInformation("----- (Users.API) UsersIntegrationEventService - Publishing integration event: {IntegrationEventId_published} - ({@IntegrationEvent})", evt.Id, evt);
 
                 await _eventLogService.MarkEventAsInProgressAsync(evt.Id);
                 _eventBus.Publish(evt);
@@ -48,7 +46,7 @@ namespace Lounge.Services.Users.Infrastructure.IntegrationEvents
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "ERROR Publishing integration event: {IntegrationEventId} - ({@IntegrationEvent})", evt.Id, evt);
+                _logger.LogError(ex, "ERROR ----- (Users.API) UsersIntegrationEventService - Publishing integration event: {IntegrationEventId} - ({@IntegrationEvent})", evt.Id, evt);
                 await _eventLogService.MarkEventAsFailedAsync(evt.Id);
             }
 
@@ -56,7 +54,7 @@ namespace Lounge.Services.Users.Infrastructure.IntegrationEvents
 
         public async Task SaveEventsAndUsersContextChangesAsync(params IntegrationEvent[] events)
         {
-            _logger.LogInformation("----- UsersIntegrationEventService - Saving changes and integrationEvents: {IntegrationEventsIds}",
+            _logger.LogInformation("----- (Users.API) UsersIntegrationEventService - Saving changes and integrationEvents: {IntegrationEventsIds}",
                 string.Join(", ", events.Select(evt => evt.Id)));
 
             //Use of an EF Core resiliency strategy when using multiple DbContexts within an explicit BeginTransaction():

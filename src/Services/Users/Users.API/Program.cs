@@ -1,3 +1,4 @@
+using Autofac.Extensions.DependencyInjection;
 using Lounge.BuildingBlocks.IntegrationEventLogEF;
 using Lounge.Services.Users.Infrastructure.Data;
 using Microsoft.AspNetCore.Hosting;
@@ -50,6 +51,7 @@ namespace Lounge.Services.Users.API
         private static IHost CreateHostBuilder(IConfiguration configuration, string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(x => x.AddConfiguration(configuration))
+                .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.CaptureStartupErrors(false);

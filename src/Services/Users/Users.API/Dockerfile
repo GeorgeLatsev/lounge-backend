@@ -1,22 +1,31 @@
-#See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:5.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/aspnet:5.0 AS base
 WORKDIR /app
 EXPOSE 80
-EXPOSE 443
 
-FROM mcr.microsoft.com/dotnet/sdk:5.0-buster-slim AS build
+FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build
 WORKDIR /src
-COPY ["Services/Users/Users.API/Users.API.csproj", "Services/Users/Users.API/"]
-RUN dotnet restore "Services/Users/Users.API/Users.API.csproj"
+
+COPY "BuildingBlocks/EventBus/EventBus/EventBus.csproj" "BuildingBlocks/EventBus/EventBus/EventBus.csproj"
+COPY "BuildingBlocks/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj" "BuildingBlocks/EventBus/EventBusRabbitMQ/EventBusRabbitMQ.csproj"
+COPY "BuildingBlocks/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj" "BuildingBlocks/EventBus/IntegrationEventLogEF/IntegrationEventLogEF.csproj"
+COPY "BuildingBlocks/HostCustomization/Host.Customization/Host.Customization.csproj" "BuildingBlocks/HostCustomization/Host.Customization/Host.Customization.csproj"
+
+COPY "Services/Users/Users.Models/Users.Models.csproj" "Services/Users/Users.Models/Users.Models.csproj"
+COPY "Services/Users/Users.Infrastructure/Users.Infrastructure.csproj" "Services/Users/Users.Infrastructure/Users.Infrastructure.csproj"
+COPY "Services/Users/Users.Services/Users.Services.csproj" "Services/Users/Users.Services/Users.Services.csproj"
+COPY "Services/Users/Users.API/Users.API.csproj" "Services/Users/Users.API/Users.API.csproj"
+
+COPY "/Lounge.sln" "Lounge.sln"
+
+RUN dotnet restore "Lounge.sln"
+
 COPY . .
-WORKDIR "/src/Services/Users/Users.API"
-RUN dotnet build "Users.API.csproj" -c Release -o /app/build
+WORKDIR /src/Services/Users/Users.API
+RUN dotnet publish --no-restore -c Release -o /app
 
 FROM build AS publish
-RUN dotnet publish "Users.API.csproj" -c Release -o /app/publish
 
 FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+COPY --from=publish /app .
 ENTRYPOINT ["dotnet", "Users.API.dll"]
