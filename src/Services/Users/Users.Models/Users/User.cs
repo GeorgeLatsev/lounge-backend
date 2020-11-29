@@ -11,7 +11,7 @@ namespace Lounge.Services.Users.Models.Users
         
         public string Tag { get; set; }
 
-        public Settings Settings { get; set; }
+        public Settings Settings { get; set; } = new Settings();
 
         public ICollection<Connection> Connections { get; set; } = new HashSet<Connection>();
 

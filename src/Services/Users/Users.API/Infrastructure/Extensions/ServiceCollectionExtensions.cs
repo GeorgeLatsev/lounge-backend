@@ -19,6 +19,7 @@ using System;
 using System.Data.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using Lounge.Services.Users.Services.Users;
 
 namespace Lounge.Services.Users.API.Infrastructure.Extensions
 {

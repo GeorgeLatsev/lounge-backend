@@ -1,9 +1,11 @@
 using Autofac;
 using HealthChecks.UI.Client;
 using Lounge.Services.Users.API.Infrastructure.Extensions;
+using Lounge.Services.Users.Services.Users;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -32,7 +34,10 @@ namespace Lounge.Services.Users.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
-
+            builder.RegisterAssemblyTypes(typeof(IUsersService).Assembly)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
