@@ -27,7 +27,7 @@ namespace Lounge.Services.Users.API.Controllers
         }
 
         [HttpPatch("@me")]
-        public async Task<ActionResult> UpdateCurrentUser([FromBody] JsonPatchDocument<UserUpdateModel> patchDoc)
+        public async Task<ActionResult> UpdateUser([FromBody] JsonPatchDocument<UserUpdateModel> patchDoc)
         {
             var userId = _identityService.GetUserIdentity();
             var userResult = await _usersService.GetAsync(userId);
