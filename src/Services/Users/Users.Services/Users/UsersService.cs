@@ -5,6 +5,7 @@ using Lounge.Services.Users.Services.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
+using Lounge.Services.Users.Services.IntegrationEvents;
 
 namespace Lounge.Services.Users.Services.Users
 {
@@ -86,7 +87,10 @@ namespace Lounge.Services.Users.Services.Users
                 user.Tag = tagResult.Data;
             }
 
-            await _context.SaveChangesAsync();
+            var userUpdatedEvent = new UserUpdatedIntegrationEvent(id, user.Name, user.Tag);
+
+            await _integrationEventService.SaveEventsAndUsersContextChangesAsync(userUpdatedEvent);
+            await _integrationEventService.PublishThroughEventBusAsync(userUpdatedEvent);
 
             return Result.Success;
         }
