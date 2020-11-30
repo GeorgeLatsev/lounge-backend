@@ -19,6 +19,7 @@ using System;
 using System.Data.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
+using FluentValidation.AspNetCore;
 using Lounge.Services.Users.Services.Users;
 
 namespace Lounge.Services.Users.API.Infrastructure.Extensions
@@ -152,8 +153,11 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
                 {
                     // options.Filters.Add(typeof(HttpGlobalExceptionFilter)); // TODO
                 })
-                .AddNewtonsoftJson();
-            ;
+                .AddNewtonsoftJson()
+                .AddFluentValidation(options =>
+                {
+                    options.RegisterValidatorsFromAssemblyContaining<Startup>();
+                });
 
             services.AddCors(options =>
             {
@@ -180,13 +184,13 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
                     name: "UsersDB-check",
                     tags: new string[] { "usersdb" });
 
-                hcBuilder
-                    .AddRabbitMQ(
-                        $"amqp://{configuration["EventBusConnection"]}",
-                        name: "users-rabbitmqbus-check",
-                        tags: new string[] { "rabbitmqbus" });
-
-                return services;
+            hcBuilder
+                .AddRabbitMQ(
+                    $"amqp://{configuration["EventBusConnection"]}", 
+                    name: "users-rabbitmqbus-check", 
+                    tags: new string[] { "rabbitmqbus" });
+            
+            return services;
         }
     }
 }
