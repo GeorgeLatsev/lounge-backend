@@ -1,6 +1,6 @@
 ﻿using Lounge.BuildingBlocks.EventBus.Events;
 
-namespace Lounge.Services.Users.Services.IntegrationEvents
+namespace Lounge.Services.Users.Services.Users.IntegrationEvents
 {
     public class UserUpdatedIntegrationEvent : IntegrationEvent
     {

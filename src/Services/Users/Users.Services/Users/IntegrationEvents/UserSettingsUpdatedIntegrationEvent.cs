@@ -1,7 +1,7 @@
 ﻿using Lounge.BuildingBlocks.EventBus.Events;
 using Lounge.Services.Users.Models.Users;
 
-namespace Lounge.Services.Users.Services.IntegrationEvents
+namespace Lounge.Services.Users.Services.Users.IntegrationEvents
 {
     public class UserSettingsUpdatedIntegrationEvent : IntegrationEvent
     {

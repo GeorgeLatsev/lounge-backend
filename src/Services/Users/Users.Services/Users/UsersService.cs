@@ -5,7 +5,7 @@ using Lounge.Services.Users.Services.Users.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Lounge.Services.Users.Services.IntegrationEvents;
+using Lounge.Services.Users.Services.Users.IntegrationEvents;
 
 namespace Lounge.Services.Users.Services.Users
 {

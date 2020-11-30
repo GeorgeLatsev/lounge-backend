@@ -3,7 +3,7 @@ using System;
 using System.Threading.Tasks;
 using Lounge.Services.Users.Infrastructure.Data;
 using Lounge.Services.Users.Infrastructure.IntegrationEvents;
-using Lounge.Services.Users.Services.IntegrationEvents;
+using Lounge.Services.Users.Services.Users.IntegrationEvents;
 using Lounge.Services.Users.Services.Users.Models;
 using Microsoft.EntityFrameworkCore;
 
