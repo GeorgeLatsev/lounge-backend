@@ -1,4 +1,4 @@
-﻿namespace Lounge.Services.Users.Models.Users
+﻿namespace Lounge.Services.Users.Models.UserEntities
 {
     public class ModelConstants
     {
@@ -8,11 +8,6 @@
             public const int MaxNameLength = 24;
 
             public const int MaxTagLength = 6;
-        }
-
-        public class Connection
-        {
-            public const int MaxNotesLength = 24;
         }
     }
 }

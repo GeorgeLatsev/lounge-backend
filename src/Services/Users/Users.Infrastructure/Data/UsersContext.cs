@@ -1,4 +1,4 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Models.UserEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
 

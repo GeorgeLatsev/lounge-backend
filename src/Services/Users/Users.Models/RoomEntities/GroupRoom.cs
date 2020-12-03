@@ -1,6 +1,6 @@
-﻿namespace Lounge.Services.Users.Models.PrivateRooms
+﻿namespace Lounge.Services.Users.Models.RoomEntities
 {
-    public class GroupRoom : PrivateRoom
+    public class GroupRoom : Room
     {
         public string Name { get; set; }
 

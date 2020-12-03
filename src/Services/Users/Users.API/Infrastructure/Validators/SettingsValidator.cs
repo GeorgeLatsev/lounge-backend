@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Lounge.Services.Users.Models.Users;
+using Lounge.Services.Users.Models.UserEntities;
 
 namespace Lounge.Services.Users.API.Infrastructure.Validators
 {

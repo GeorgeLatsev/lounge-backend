@@ -1,22 +1,22 @@
-﻿using Lounge.Services.Users.Models.PrivateRooms;
+﻿using Lounge.Services.Users.Models.RoomEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Lounge.Services.Users.Infrastructure.Data.Configurations
 {
-    public class PrivateRoomEntityTypeConfiguration : IEntityTypeConfiguration<PrivateRoom>
+    public class RoomEntityTypeConfiguration : IEntityTypeConfiguration<Room>
     {
-        public void Configure(EntityTypeBuilder<PrivateRoom> builder)
+        public void Configure(EntityTypeBuilder<Room> builder)
         {
-            builder.ToTable("PrivateRooms");
+            builder.ToTable("Rooms");
 
             builder.HasKey(pr => pr.Id);
             builder.Property(pr => pr.Id)
-                .UseHiLo("prseq");
+                .UseHiLo("rseq");
 
             builder.HasDiscriminator(pr => pr.Type)
-                .HasValue<PrivateRoom>(PrivateRoomType.Normal)
-                .HasValue<GroupRoom>(PrivateRoomType.Group);
+                .HasValue<Room>(RoomType.Private)
+                .HasValue<GroupRoom>(RoomType.Group);
 
             builder.Property(pr => pr.RoomId)
                 .IsRequired(false);

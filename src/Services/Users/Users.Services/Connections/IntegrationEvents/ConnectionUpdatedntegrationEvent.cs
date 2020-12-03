@@ -1,5 +1,5 @@
 ﻿using Lounge.BuildingBlocks.EventBus.Events;
-using Lounge.Services.Users.Models.Users;
+using Lounge.Services.Users.Models.ConnectionEntities;
 
 namespace Lounge.Services.Users.Services.Connections.IntegrationEvents
 {

@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Lounge.Services.Users.Models.Users;
+using Lounge.Services.Users.Models.UserEntities;
 
 namespace Lounge.Services.Users.API.Controllers
 {

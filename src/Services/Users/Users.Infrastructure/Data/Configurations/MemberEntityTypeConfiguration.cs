@@ -1,4 +1,4 @@
-﻿using Lounge.Services.Users.Models.PrivateRooms;
+﻿using Lounge.Services.Users.Models.RoomEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -8,7 +8,7 @@ namespace Lounge.Services.Users.Infrastructure.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Member> builder)
         {
-            builder.ToTable("PrivateRoomMembers");
+            builder.ToTable("RoomMembers");
 
             builder.HasKey(m => new { m.RoomId, m.UserId });
         }

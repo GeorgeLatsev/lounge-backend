@@ -1,4 +1,4 @@
-﻿namespace Lounge.Services.Users.Models.Users
+﻿namespace Lounge.Services.Users.Models.ConnectionEntities
 {
     public enum RelationshipEnum
     {

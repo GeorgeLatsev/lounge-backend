@@ -7,7 +7,7 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateSequence(
-                name: "prseq",
+                name: "rseq",
                 incrementBy: 10);
 
             migrationBuilder.CreateTable(
@@ -25,7 +25,7 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrivateRooms",
+                name: "Rooms",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -36,9 +36,9 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrivateRooms", x => x.Id);
+                    table.PrimaryKey("PK_Rooms", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_PrivateRooms_Users_OwnerId",
+                        name: "FK_Rooms_Users_OwnerId",
                         column: x => x.OwnerId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -50,16 +50,16 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    OtherUserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    OtherId = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Notes = table.Column<string>(type: "nvarchar(24)", maxLength: 24, nullable: true),
                     Relationship = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UserConnections", x => new { x.UserId, x.OtherUserId });
+                    table.PrimaryKey("PK_UserConnections", x => new { x.UserId, x.OtherId });
                     table.ForeignKey(
-                        name: "FK_UserConnections_Users_OtherUserId",
-                        column: x => x.OtherUserId,
+                        name: "FK_UserConnections_Users_OtherId",
+                        column: x => x.OtherId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
@@ -72,7 +72,7 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PrivateRoomMembers",
+                name: "RoomMembers",
                 columns: table => new
                 {
                     RoomId = table.Column<int>(type: "int", nullable: false),
@@ -80,15 +80,15 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PrivateRoomMembers", x => new { x.RoomId, x.UserId });
+                    table.PrimaryKey("PK_RoomMembers", x => new { x.RoomId, x.UserId });
                     table.ForeignKey(
-                        name: "FK_PrivateRoomMembers_PrivateRooms_RoomId",
+                        name: "FK_RoomMembers_Rooms_RoomId",
                         column: x => x.RoomId,
-                        principalTable: "PrivateRooms",
+                        principalTable: "Rooms",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_PrivateRoomMembers_Users_UserId",
+                        name: "FK_RoomMembers_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
@@ -96,37 +96,37 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrivateRoomMembers_UserId",
-                table: "PrivateRoomMembers",
+                name: "IX_RoomMembers_UserId",
+                table: "RoomMembers",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_PrivateRooms_OwnerId",
-                table: "PrivateRooms",
+                name: "IX_Rooms_OwnerId",
+                table: "Rooms",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_UserConnections_OtherUserId",
+                name: "IX_UserConnections_OtherId",
                 table: "UserConnections",
-                column: "OtherUserId");
+                column: "OtherId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "PrivateRoomMembers");
+                name: "RoomMembers");
 
             migrationBuilder.DropTable(
                 name: "UserConnections");
 
             migrationBuilder.DropTable(
-                name: "PrivateRooms");
+                name: "Rooms");
 
             migrationBuilder.DropTable(
                 name: "Users");
 
             migrationBuilder.DropSequence(
-                name: "prseq");
+                name: "rseq");
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Models.UserEntities;
 
 namespace Lounge.Services.Users.Services.Users.Models
 {

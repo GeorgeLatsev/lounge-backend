@@ -1,16 +1,11 @@
-﻿namespace Lounge.Services.Users.Models.PrivateRooms
+﻿namespace Lounge.Services.Users.Models.RoomEntities
 {
     public class ModelConstants
     {
-        public class PrivateRoom
-        {
-        }
-
         public class GroupRoom
         {
             public const int MinNameLength = 50;
             public const int MaxNameLength = 50;
-
         }
     }
 }

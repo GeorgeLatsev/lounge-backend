@@ -1,5 +1,5 @@
-﻿using Lounge.Services.Users.Models.Users;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Lounge.Services.Users.Models.UserEntities;
 
 namespace Lounge.Services.Users.Services.Users
 {

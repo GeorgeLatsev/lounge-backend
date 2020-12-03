@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Lounge.Services.Users.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(UsersContext))]
-    [Migration("20201127161010_Initial")]
+    [Migration("20201203201610_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -18,10 +18,32 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.0");
 
-            modelBuilder.HasSequence("prseq")
+            modelBuilder.HasSequence("rseq")
                 .IncrementsBy(10);
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.Member", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.ConnectionEntities.Connection", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("OtherId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(24)
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<int>("Relationship")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserId", "OtherId");
+
+                    b.HasIndex("OtherId");
+
+                    b.ToTable("UserConnections");
+                });
+
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.Member", b =>
                 {
                     b.Property<int>("RoomId")
                         .HasColumnType("int");
@@ -33,15 +55,15 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("PrivateRoomMembers");
+                    b.ToTable("RoomMembers");
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.PrivateRoom", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .UseHiLo("prseq");
+                        .UseHiLo("rseq");
 
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
@@ -51,34 +73,12 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PrivateRooms");
+                    b.ToTable("Rooms");
 
                     b.HasDiscriminator<int>("Type").HasValue(1);
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.Users.Connection", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OtherUserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Notes")
-                        .HasMaxLength(24)
-                        .HasColumnType("nvarchar(24)");
-
-                    b.Property<int>("Relationship")
-                        .HasColumnType("int");
-
-                    b.HasKey("UserId", "OtherUserId");
-
-                    b.HasIndex("OtherUserId");
-
-                    b.ToTable("UserConnections");
-                });
-
-            modelBuilder.Entity("Lounge.Services.Users.Models.Users.User", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.UserEntities.User", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
@@ -96,9 +96,9 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.GroupRoom", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.GroupRoom", b =>
                 {
-                    b.HasBaseType("Lounge.Services.Users.Models.PrivateRooms.PrivateRoom");
+                    b.HasBaseType("Lounge.Services.Users.Models.RoomEntities.Room");
 
                     b.Property<string>("Name")
                         .HasMaxLength(50)
@@ -112,15 +112,32 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                     b.HasDiscriminator().HasValue(2);
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.Member", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.ConnectionEntities.Connection", b =>
                 {
-                    b.HasOne("Lounge.Services.Users.Models.PrivateRooms.PrivateRoom", "Room")
+                    b.HasOne("Lounge.Services.Users.Models.UserEntities.User", "OtherUser")
+                        .WithMany()
+                        .HasForeignKey("OtherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Lounge.Services.Users.Models.UserEntities.User", null)
+                        .WithMany("Connections")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("OtherUser");
+                });
+
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.Member", b =>
+                {
+                    b.HasOne("Lounge.Services.Users.Models.RoomEntities.Room", "Room")
                         .WithMany("Members")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Lounge.Services.Users.Models.Users.User", "User")
+                    b.HasOne("Lounge.Services.Users.Models.UserEntities.User", "User")
                         .WithMany("PrivateRooms")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
@@ -131,26 +148,9 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.Users.Connection", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.UserEntities.User", b =>
                 {
-                    b.HasOne("Lounge.Services.Users.Models.Users.User", "OtherUser")
-                        .WithMany()
-                        .HasForeignKey("OtherUserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Lounge.Services.Users.Models.Users.User", null)
-                        .WithMany("Connections")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("OtherUser");
-                });
-
-            modelBuilder.Entity("Lounge.Services.Users.Models.Users.User", b =>
-                {
-                    b.OwnsOne("Lounge.Services.Users.Models.Users.Settings", "Settings", b1 =>
+                    b.OwnsOne("Lounge.Services.Users.Models.UserEntities.Settings", "Settings", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("nvarchar(450)");
@@ -169,20 +169,20 @@ namespace Lounge.Services.Users.Infrastructure.Data.Migrations
                     b.Navigation("Settings");
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.GroupRoom", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.GroupRoom", b =>
                 {
-                    b.HasOne("Lounge.Services.Users.Models.Users.User", null)
+                    b.HasOne("Lounge.Services.Users.Models.UserEntities.User", null)
                         .WithMany()
                         .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Restrict);
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.PrivateRooms.PrivateRoom", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.RoomEntities.Room", b =>
                 {
                     b.Navigation("Members");
                 });
 
-            modelBuilder.Entity("Lounge.Services.Users.Models.Users.User", b =>
+            modelBuilder.Entity("Lounge.Services.Users.Models.UserEntities.User", b =>
                 {
                     b.Navigation("Connections");
 

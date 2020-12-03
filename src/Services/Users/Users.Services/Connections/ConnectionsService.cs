@@ -1,18 +1,15 @@
-﻿using Lounge.Services.Users.Services.Connections.Models;
+﻿using Lounge.Services.Users.Infrastructure.Data;
+using Lounge.Services.Users.Infrastructure.IntegrationEvents;
+using Lounge.Services.Users.Models.ConnectionEntities;
+using Lounge.Services.Users.Models.UserEntities;
+using Lounge.Services.Users.Services.Connections.IntegrationEvents;
+using Lounge.Services.Users.Services.Connections.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata.Ecma335;
-using System.Text;
 using System.Threading.Tasks;
-using Lounge.Services.Users.Infrastructure.Data;
-using Lounge.Services.Users.Infrastructure.IntegrationEvents;
-using Lounge.Services.Users.Models.Users;
-using Lounge.Services.Users.Services.Connections.IntegrationEvents;
-using Lounge.Services.Users.Services.Users;
-using Lounge.Services.Users.Services.Users.Models;
-using Microsoft.EntityFrameworkCore;
-using static Lounge.Services.Users.Models.Users.RelationshipEnum;
+using static Lounge.Services.Users.Models.ConnectionEntities.RelationshipEnum;
 
 namespace Lounge.Services.Users.Services.Connections
 {
@@ -53,7 +50,7 @@ namespace Lounge.Services.Users.Services.Connections
             var connection = await _context.Set<Connection>()
                 .AsNoTracking()
                 .Include(c => c.OtherUser)
-                .SingleOrDefaultAsync(c => c.UserId == userId && c.OtherUserId == otherId);
+                .SingleOrDefaultAsync(c => c.UserId == userId && c.OtherId == otherId);
 
             if (connection is null)
             {
@@ -64,7 +61,7 @@ namespace Lounge.Services.Users.Services.Connections
                     return Result<ConnectionModel>.Failure(error);
                 }
 
-                var other = await _context.Users
+                var other = await _context.Set<User>()
                     .AsNoTracking()
                     .SingleOrDefaultAsync(u => u.Id == otherId);
 
@@ -74,7 +71,7 @@ namespace Lounge.Services.Users.Services.Connections
                     return Result<ConnectionModel>.Failure(error);
                 }
 
-                connection = new Connection { UserId =  userId, OtherUserId = otherId };
+                connection = new Connection { UserId =  userId, OtherId = otherId };
 
                 _context.Set<Connection>().Add(connection);
 
@@ -111,7 +108,7 @@ namespace Lounge.Services.Users.Services.Connections
             var connection = await _context.Set<Connection>()
                 .AsNoTracking()
                 .Include(c => c.OtherUser)
-                .SingleOrDefaultAsync(c => c.UserId == userId && c.OtherUserId == other.Id);
+                .SingleOrDefaultAsync(c => c.UserId == userId && c.OtherId == other.Id);
 
             if (connection is null)
             {
@@ -122,7 +119,7 @@ namespace Lounge.Services.Users.Services.Connections
                     return Result<ConnectionModel>.Failure(error);
                 }
 
-                connection = new Connection { UserId = userId, OtherUserId = other.Id };
+                connection = new Connection { UserId = userId, OtherId = other.Id };
 
                 _context.Set<Connection>().Add(connection);
 

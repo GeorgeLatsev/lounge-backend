@@ -1,8 +1,8 @@
-﻿using Lounge.Services.Users.Models.PrivateRooms;
-using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Models.RoomEntities;
+using Lounge.Services.Users.Models.UserEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Lounge.Services.Users.Models.PrivateRooms.ModelConstants.GroupRoom;
+using static Lounge.Services.Users.Models.RoomEntities.ModelConstants.GroupRoom;
 
 namespace Lounge.Services.Users.Infrastructure.Data.Configurations
 {

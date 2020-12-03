@@ -1,4 +1,4 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Models.ConnectionEntities;
 
 namespace Lounge.Services.Users.Services.Connections.Models
 {
@@ -22,7 +22,7 @@ namespace Lounge.Services.Users.Services.Connections.Models
             return new ConnectionModel
             {
                 UserId = connection.UserId,
-                OtherId = connection.OtherUserId,
+                OtherId = connection.OtherId,
                 Name = connection.OtherUser.Name,
                 Tag = connection.OtherUser.Tag,
                 Notes = connection.Notes,

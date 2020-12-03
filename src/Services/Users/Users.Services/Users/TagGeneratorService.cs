@@ -2,7 +2,7 @@
 using System.Text;
 using System.Threading.Tasks;
 using Lounge.Services.Users.Infrastructure.Data;
-using Lounge.Services.Users.Models.Users;
+using Lounge.Services.Users.Models.UserEntities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lounge.Services.Users.Services.Users

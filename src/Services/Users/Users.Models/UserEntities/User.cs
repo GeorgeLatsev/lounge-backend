@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
-using Lounge.Services.Users.Models.PrivateRooms;
+using Lounge.Services.Users.Models.ConnectionEntities;
+using Lounge.Services.Users.Models.RoomEntities;
 
-namespace Lounge.Services.Users.Models.Users
+namespace Lounge.Services.Users.Models.UserEntities
 {
     public class User
     {

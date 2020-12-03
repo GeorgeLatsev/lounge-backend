@@ -1,7 +1,7 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Models.ConnectionEntities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using static Lounge.Services.Users.Models.Users.ModelConstants.Connection;
+using static Lounge.Services.Users.Models.ConnectionEntities.ModelConstants.Connection;
 
 namespace Lounge.Services.Users.Infrastructure.Data.Configurations
 {
@@ -11,11 +11,11 @@ namespace Lounge.Services.Users.Infrastructure.Data.Configurations
         {
             builder.ToTable("UserConnections");
 
-            builder.HasKey(c => new { c.UserId, c.OtherUserId });
+            builder.HasKey(c => new { c.UserId, OtherUserId = c.OtherId });
 
             builder.HasOne(c => c.OtherUser)
                 .WithMany()
-                .HasForeignKey(c => c.OtherUserId)
+                .HasForeignKey(c => c.OtherId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.Property(c => c.Notes)
