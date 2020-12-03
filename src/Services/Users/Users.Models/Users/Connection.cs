@@ -8,7 +8,7 @@
 
         public User OtherUser { get; set; }
 
-        public string Notes { get; set; }
+        public string Notes { get; set; } = string.Empty;
 
         public RelationshipEnum Relationship { get; set; }
     }
