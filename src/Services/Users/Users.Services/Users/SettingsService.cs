@@ -1,11 +1,10 @@
-﻿using Lounge.Services.Users.Models.Users;
+﻿using Lounge.Services.Users.Infrastructure.Data;
+using Lounge.Services.Users.Infrastructure.IntegrationEvents;
+using Lounge.Services.Users.Models.Users;
+using Lounge.Services.Users.Services.Users.IntegrationEvents;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Threading.Tasks;
-using Lounge.Services.Users.Infrastructure.Data;
-using Lounge.Services.Users.Infrastructure.IntegrationEvents;
-using Lounge.Services.Users.Services.Users.IntegrationEvents;
-using Lounge.Services.Users.Services.Users.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace Lounge.Services.Users.Services.Users
 {

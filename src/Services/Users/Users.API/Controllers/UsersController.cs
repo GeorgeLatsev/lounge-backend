@@ -11,7 +11,7 @@ using Lounge.Services.Users.Models.Users;
 
 namespace Lounge.Services.Users.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [Authorize]
     [ApiController]
     public class UsersController : ControllerBase
