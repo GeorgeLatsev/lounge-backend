@@ -16,7 +16,12 @@ namespace Lounge.Services.Users.API.Infrastructure.Services
         {
             var claim = _context.HttpContext?.User?.FindFirst("sub");
 
-            return claim?.Value;
+            if (claim is null)
+            {
+                throw new InvalidOperationException("Something went wrong while trying to get user identity.");
+            }
+
+            return claim.Value;
         }
     }
 }
