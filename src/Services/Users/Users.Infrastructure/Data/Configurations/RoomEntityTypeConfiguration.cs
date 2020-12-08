@@ -10,18 +10,15 @@ namespace Lounge.Services.Users.Infrastructure.Data.Configurations
         {
             builder.ToTable("Rooms");
 
-            builder.HasKey(pr => pr.Id);
-            builder.Property(pr => pr.Id)
+            builder.HasKey(r => r.Id);
+            builder.Property(r => r.Id)
                 .UseHiLo("rseq");
 
-            builder.HasDiscriminator(pr => pr.Type)
+            builder.HasDiscriminator(r => r.Type)
                 .HasValue<Room>(RoomType.Private)
                 .HasValue<GroupRoom>(RoomType.Group);
 
-            builder.Property(pr => pr.RoomId)
-                .IsRequired(false);
-
-            builder.HasMany(pr => pr.Members)
+            builder.HasMany(r => r.Members)
                 .WithOne(m => m.Room)
                 .HasForeignKey(m => m.RoomId)
                 .OnDelete(DeleteBehavior.Restrict);

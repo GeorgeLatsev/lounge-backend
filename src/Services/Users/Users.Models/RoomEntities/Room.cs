@@ -6,8 +6,6 @@ namespace Lounge.Services.Users.Models.RoomEntities
     {
         public int Id { get; set; }
 
-        public int? RoomId { get; set; }
-
         public RoomType Type { get; set; }
 
         public ICollection<Member> Members { get; set; } = new HashSet<Member>();
