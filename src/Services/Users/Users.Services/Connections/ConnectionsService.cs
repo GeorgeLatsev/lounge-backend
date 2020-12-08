@@ -43,7 +43,7 @@ namespace Lounge.Services.Users.Services.Connections
         {
             if (userId == otherId)
             {
-                var error = ConnectionsServiceErrors.UnableToGetConnectionToSelf();
+                var error = Errors.UnableToGetConnectionToSelf();
                 return Result<ConnectionModel>.Failure(error);
             }
 
@@ -57,7 +57,7 @@ namespace Lounge.Services.Users.Services.Connections
                 var userExists = await _context.Set<User>().AnyAsync(u => u.Id == userId);
                 if (!userExists)
                 {
-                    var error = ConnectionsServiceErrors.UserNotFound(userId);
+                    var error = Errors.UserNotFound(userId);
                     return Result<ConnectionModel>.Failure(error);
                 }
 
@@ -67,7 +67,7 @@ namespace Lounge.Services.Users.Services.Connections
 
                 if (other is null)
                 {
-                    var error = ConnectionsServiceErrors.UserNotFound(otherId);
+                    var error = Errors.UserNotFound(otherId);
                     return Result<ConnectionModel>.Failure(error);
                 }
 
@@ -95,13 +95,13 @@ namespace Lounge.Services.Users.Services.Connections
 
             if (other is null)
             {
-                var error = ConnectionsServiceErrors.UserWithDisplayNameNotFound(displayName);
+                var error = Errors.UserWithDisplayNameNotFound(displayName);
                 return Result<ConnectionModel>.Failure(error);
             }
 
             if (userId == other.Id)
             {
-                var error = ConnectionsServiceErrors.UnableToGetConnectionToSelf();
+                var error = Errors.UnableToGetConnectionToSelf();
                 return Result<ConnectionModel>.Failure(error);
             }
 
@@ -115,7 +115,7 @@ namespace Lounge.Services.Users.Services.Connections
                 var userExists = await _context.Set<User>().AnyAsync(u => u.Id == userId);
                 if (!userExists)
                 {
-                    var error = ConnectionsServiceErrors.UserNotFound(userId);
+                    var error = Errors.UserNotFound(userId);
                     return Result<ConnectionModel>.Failure(error);
                 }
 
@@ -220,7 +220,7 @@ namespace Lounge.Services.Users.Services.Connections
                     break;
                 }
 
-                case RelationshipEnum.Blocked:
+                case Blocked:
                 {
                     if (model.Relationship == None)
                     {
@@ -237,7 +237,7 @@ namespace Lounge.Services.Users.Services.Connections
                     break;
                 }
 
-                case RelationshipEnum.BeingBlocked:
+                case BeingBlocked:
                 {
                     if (model.Relationship == Blocked)
                     {
@@ -250,7 +250,7 @@ namespace Lounge.Services.Users.Services.Connections
 
             if (!relationshipForOther.HasValue)
             {
-                var error = ConnectionsServiceErrors.InvalidRelationshipUpdate();
+                var error = Errors.InvalidRelationshipUpdate();
                 return Result.Failure(error);
             }
 

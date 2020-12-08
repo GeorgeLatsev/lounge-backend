@@ -32,7 +32,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (alreadyExists)
             {
-                var error = UsersServiceErrors.UserAlreadyExists(id);
+                var error = Errors.UserAlreadyExists(id);
                 return Result<UserModel>.Failure(error);
             }
 
@@ -54,7 +54,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (user is null)
             {
-                var error = UsersServiceErrors.UserNotFound(id);
+                var error = Errors.UserNotFound(id);
                 return Result<UserModel>.Failure(error);
             }
 
@@ -69,7 +69,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (user is null)
             {
-                var error = UsersServiceErrors.UserNotFound(id);
+                var error = Errors.UserNotFound(id);
                 return Result.Failure(error);
             }
 

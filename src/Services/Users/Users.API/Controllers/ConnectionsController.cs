@@ -86,7 +86,6 @@ namespace Lounge.Services.Users.API.Controllers
                 return BadRequest(validationErrors);
             }
 
-
             var updateResult = await _connectionsService.UpdateAsync(userId, otherId, updateModel);
 
             if (!updateResult.Succeeded)

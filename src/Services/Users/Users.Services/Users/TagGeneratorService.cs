@@ -26,7 +26,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (usernameOccurrences >= 256)
             {
-                var error = UsersServiceErrors.NameOccurrencesLimitExceeded(name);
+                var error = Errors.NameOccurrencesLimitExceeded(name);
                 return Result<string>.Failure(error);
             }
 

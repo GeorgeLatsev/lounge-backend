@@ -30,7 +30,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (user is null)
             {
-                var error = UsersServiceErrors.UserNotFound(userId);
+                var error = Errors.UserNotFound(userId);
                 return Result<Settings>.Failure(error);
             }
 
@@ -44,7 +44,7 @@ namespace Lounge.Services.Users.Services.Users
 
             if (user is null)
             {
-                var error = UsersServiceErrors.UserNotFound(userId);
+                var error = Errors.UserNotFound(userId);
                 return Result.Failure(error);
             }
 
