@@ -7,7 +7,7 @@
             public const int MinNameLength = 2;
             public const int MaxNameLength = 24;
 
-            public const int MaxTagLength = 6;
+            public const int MaxTagLength = 4;
         }
     }
 }

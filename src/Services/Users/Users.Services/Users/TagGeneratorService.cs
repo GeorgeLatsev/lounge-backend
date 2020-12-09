@@ -48,8 +48,8 @@ namespace Lounge.Services.Users.Services.Users
 
         private string CreateTag(int part1, int part2)
         {
-            var str1 = EncodeIntAsString(part1, ModelConstants.User.MaxTagLength / 2);
-            var str2 = EncodeIntAsString(part2, ModelConstants.User.MaxTagLength / 2);
+            var str1 = EncodeIntAsString(part1, 2);
+            var str2 = EncodeIntAsString(part2, 2);
 
             var tag = string.Empty + str1[0] + str2[0] + str1[1] + str2[1];
 
