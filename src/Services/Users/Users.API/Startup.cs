@@ -41,7 +41,7 @@ namespace Lounge.Services.Users.API
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UserCustomPathBase(Configuration, loggerFactory);
+            app.UseCustomPathBase(Configuration, loggerFactory);
 
             app.UseRouting();
             app.UseCors("CorsPolicy");

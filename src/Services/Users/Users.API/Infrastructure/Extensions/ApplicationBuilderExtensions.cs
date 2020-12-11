@@ -8,7 +8,7 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UserCustomPathBase(this IApplicationBuilder app, IConfiguration configuration, ILoggerFactory loggerFactory)
+        public static IApplicationBuilder UseCustomPathBase(this IApplicationBuilder app, IConfiguration configuration, ILoggerFactory loggerFactory)
         {
             var pathBase = configuration["PATH_BASE"];
 
