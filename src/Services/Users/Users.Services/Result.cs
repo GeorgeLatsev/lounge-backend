@@ -2,7 +2,7 @@
 
 namespace Lounge.Services.Users.Services
 {
-    public class Result // TODO
+    public class Result
     {
         private readonly string[] _errors;
 

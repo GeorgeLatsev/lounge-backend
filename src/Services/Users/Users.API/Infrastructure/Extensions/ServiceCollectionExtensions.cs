@@ -149,10 +149,7 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
 
         public static IServiceCollection AddCustomMvc(this IServiceCollection services)
         {
-            services.AddControllers(options =>
-                {
-                    // options.Filters.Add(typeof(HttpGlobalExceptionFilter)); // TODO
-                })
+            services.AddControllers()
                 .AddNewtonsoftJson()
                 .AddFluentValidation(options =>
                 {
