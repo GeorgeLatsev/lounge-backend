@@ -8,6 +8,20 @@ services:
     ports:
       - "5340:80"
 
+  noticationsdata:
+    image: redis:6.0.9-alpine
+    volumes:
+      - lounge-noticationsdata:/data
+    ports:
+      - "6380:6379"
+
+  signalrbackplane:
+    image: redis:6.0.9-alpine
+    volumes:
+      - lounge-signalrbackplane:/data
+    ports:
+      - "6379:6379"
+
   usersdata:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
@@ -48,6 +62,33 @@ services:
       - usersdata
       - rabbitmq
 
+  notifications-api:
+    image: ${REGISTRY:-lounge}/notifications.api:${PLATFORM:-linux}-${TAG:-latest}
+    build:
+      context: .
+      dockerfile: Services/Notifications/Notifications.API/Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - IdentityAuthority=${LOUNGE_IDENTITY_AUTHORITY}
+      - IdentityAudience=localhost:5100
+      - SignalRBackplaneConnectionString=signalrbackplane
+      - RedisConnectionString=noticationsdata
+      - EventBusConnection=rabbitmq
+      - EventBusUserName=${RABBITMQ_DEFAULT_USER}
+      - EventBusPassword=${RABBITMQ_DEFAULT_PASS}
+      - PATH_BASE=/notifications-api
+    ports:
+      - "5101:80"
+      - "9101:81"
+    depends_on:
+      - rabbitmq
+      - noticationsdata
+      - signalrbackplane
+
 volumes:
   lounge-usersdata:
+    external: false
+  lounge-noticationsdata:
+    external: false
+  lounge-signalrbackplane:
     external: false

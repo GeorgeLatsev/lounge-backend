@@ -22,7 +22,7 @@ COPY "/Lounge.sln" "Lounge.sln"
 RUN dotnet restore "Lounge.sln"
 
 COPY . .
-WORKDIR /src/Services/Users/Users.API
+WORKDIR /src/Services/Notifications/Notifications.API
 RUN dotnet publish --no-restore -c Release -o /app
 
 FROM build AS publish
@@ -30,4 +30,4 @@ FROM build AS publish
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app .
-ENTRYPOINT ["dotnet", "Users.API.dll"]
+ENTRYPOINT ["dotnet", "Notifications.API.dll"]
