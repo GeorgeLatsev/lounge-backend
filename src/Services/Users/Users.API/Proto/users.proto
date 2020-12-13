@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+option csharp_namespace = "Lounge.Services.Users.API.Proto";
+
+service UsersGrpc {
+  rpc GetUser (UserRequest) returns (UserResponse) {}
+}
+
+message UserResponse {
+    string id = 1;
+    string name = 2;
+    string tag = 3;
+    SettingsResponse settings = 4;
+}
+
+message SettingsResponse {
+    Theme theme = 1;
+}
+
+enum Theme {
+    Light = 0;
+    Dark = 1;
+}
+
+message UserRequest {
+    string id = 1;
+}
