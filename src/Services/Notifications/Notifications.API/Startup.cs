@@ -1,6 +1,8 @@
 using Autofac;
 using HealthChecks.UI.Client;
+using Lounge.Services.Notifications.API.Hubs;
 using Lounge.Services.Notifications.API.Infrastructure.Extensions;
+using Lounge.Services.Notifications.API.Notifications;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +35,10 @@ namespace Lounge.Services.Notifications.API
 
         public void ConfigureContainer(ContainerBuilder builder)
         {
+            builder.RegisterAssemblyTypes(typeof(IPublisherService).Assembly)
+                .Where(t => t.Name.EndsWith("Service"))
+                .AsImplementedInterfaces()
+                .InstancePerDependency();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -47,6 +53,7 @@ namespace Lounge.Services.Notifications.API
 
             app.UseEndpoints(endpoints =>
             {
+                endpoints.MapHub<NotificationsHub>("/notifications");
                 endpoints.MapHealthChecks("/hc", new HealthCheckOptions()
                 {
                     Predicate = _ => true,

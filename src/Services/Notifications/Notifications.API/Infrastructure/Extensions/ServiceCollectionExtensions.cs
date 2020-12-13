@@ -7,6 +7,7 @@ using Lounge.BuildingBlocks.EventBus;
 using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.BuildingBlocks.EventBusRabbitMQ;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -36,6 +37,8 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
         {
             services.AddSignalR()
                 .AddStackExchangeRedis(configuration["SignalRBackplaneConnectionString"]);
+
+            services.AddSingleton<IUserIdProvider, UserIdProvider>();
 
             return services;
         }
