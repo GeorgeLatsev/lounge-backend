@@ -152,7 +152,7 @@ namespace Lounge.Services.Users.Services.Connections
             {
                 _context.Update(connection);
 
-                var connectionUpdatedEvent = new ConnectionUpdatedntegrationEvent(userId, otherId, connection.Notes, connection.Relationship);
+                var connectionUpdatedEvent = new ConnectionUpdatedIntegrationEvent(userId, otherId, connection.Notes, connection.Relationship);
 
                 await _integrationEventService.SaveEventsAndUsersContextChangesAsync(connectionUpdatedEvent);
                 await _integrationEventService.PublishThroughEventBusAsync(connectionUpdatedEvent);
@@ -260,8 +260,8 @@ namespace Lounge.Services.Users.Services.Connections
             other.Relationship = relationshipForOther.Value;
             _context.Update(other);
 
-            var userConnectionUpdatedEvent = new ConnectionUpdatedntegrationEvent(userId, otherId, connection.Notes, connection.Relationship);
-            var otherConnectionUpdatedEvent = new ConnectionUpdatedntegrationEvent(otherId, userId, other.Notes, other.Relationship);
+            var userConnectionUpdatedEvent = new ConnectionUpdatedIntegrationEvent(userId, otherId, connection.Notes, connection.Relationship);
+            var otherConnectionUpdatedEvent = new ConnectionUpdatedIntegrationEvent(otherId, userId, other.Notes, other.Relationship);
 
             await _integrationEventService.SaveEventsAndUsersContextChangesAsync(userConnectionUpdatedEvent, otherConnectionUpdatedEvent);
             await _integrationEventService.PublishThroughEventBusAsync(userConnectionUpdatedEvent);

@@ -3,9 +3,9 @@ using Lounge.Services.Users.Models.ConnectionEntities;
 
 namespace Lounge.Services.Users.Services.Connections.IntegrationEvents
 {
-    public class ConnectionUpdatedntegrationEvent : IntegrationEvent
+    public class ConnectionUpdatedIntegrationEvent : IntegrationEvent
     {
-        public ConnectionUpdatedntegrationEvent(string userId, string otherId, string notes, RelationshipEnum relationship)
+        public ConnectionUpdatedIntegrationEvent(string userId, string otherId, string notes, RelationshipEnum relationship)
         {
             UserId = userId;
             OtherId = otherId;
