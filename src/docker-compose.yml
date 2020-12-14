@@ -70,7 +70,7 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - IdentityAuthority=${LOUNGE_IDENTITY_AUTHORITY}
-      - IdentityAudience=localhost:5100
+      - IdentityAudience=localhost:5101
       - SignalRBackplaneConnectionString=signalrbackplane
       - RedisConnectionString=noticationsdata
       - EventBusConnection=rabbitmq
