@@ -42,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Users.Models", "Services\Us
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notifications", "{9E56A372-EF74-4901-BA21-AB1152DFD13D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.API", "Services\Notifications\Notifications.API\Notifications.API.csproj", "{3E516E34-F63C-4F9D-A856-F10759E63B9A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Notifications.API", "Services\Notifications\Notifications.API\Notifications.API.csproj", "{3E516E34-F63C-4F9D-A856-F10759E63B9A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

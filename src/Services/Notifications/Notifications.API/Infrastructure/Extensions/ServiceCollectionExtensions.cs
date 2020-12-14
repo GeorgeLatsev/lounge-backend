@@ -6,7 +6,10 @@ using Autofac;
 using Lounge.BuildingBlocks.EventBus;
 using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.BuildingBlocks.EventBusRabbitMQ;
+using Lounge.Services.Notifications.API.Config;
+using Lounge.Services.Notifications.API.Grpc.Clients.Users;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -111,6 +114,17 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
             return services;
         }
 
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddHttpClient<IUsersGrpcService, UsersGrpcService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
+
+            return services;
+        }
+
         public static IServiceCollection AddEventBus(this IServiceCollection services, IConfiguration configuration)
         {
             var subscriptionClientName = configuration["SubscriptionClientName"];
@@ -138,8 +152,11 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
             return services;
         }
 
-        public static IServiceCollection AddCustomMvc(this IServiceCollection services)
+        public static IServiceCollection AddCustomMvc(this IServiceCollection services, IConfiguration configuration)
         {
+            services.AddOptions();
+            services.Configure<UrlsConfig>(configuration);
+
             services.AddCors(options =>
             {
                 options.AddPolicy("CorsPolicy",

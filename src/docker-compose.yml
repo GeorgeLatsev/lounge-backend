@@ -73,6 +73,7 @@ services:
       - IdentityAudience=localhost:5101
       - SignalRBackplaneConnectionString=signalrbackplane
       - RedisConnectionString=noticationsdata
+      - GrpcUsers=${LOUNGE_DNS_NAME_OR_IP}:9100
       - EventBusConnection=rabbitmq
       - EventBusUserName=${RABBITMQ_DEFAULT_USER}
       - EventBusPassword=${RABBITMQ_DEFAULT_PASS}

@@ -24,12 +24,13 @@ namespace Lounge.Services.Notifications.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddCustomMvc()
+                .AddCustomMvc(Configuration)
                 .AddCustomSignalR(Configuration)
                 .AddCustomRedis(Configuration)
                 .AddCustomAuthentication(Configuration)
                 .AddCustomIntegrations(Configuration)
                 .AddEventBus(Configuration)
+                .AddGrpcClients(Configuration)
                 .AddHealthChecks(Configuration);
         }
 
