@@ -1,7 +1,9 @@
 using Autofac;
 using HealthChecks.UI.Client;
+using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.Services.Notifications.API.Hubs;
 using Lounge.Services.Notifications.API.Infrastructure.Extensions;
+using Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandling;
 using Lounge.Services.Notifications.API.Notifications;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -40,6 +42,9 @@ namespace Lounge.Services.Notifications.API
                 .Where(t => t.Name.EndsWith("Service"))
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
+
+            builder.RegisterAssemblyTypes(typeof(ConnectionCreatedIntegrationEventHandler).Assembly)
+                .AsClosedTypesOf(typeof(IIntegrationEventHandler));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

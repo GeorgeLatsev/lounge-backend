@@ -1,8 +1,4 @@
-﻿using System;
-using System.Data.Common;
-using System.IdentityModel.Tokens.Jwt;
-using System.Threading.Tasks;
-using Autofac;
+﻿using Autofac;
 using Lounge.BuildingBlocks.EventBus;
 using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.BuildingBlocks.EventBusRabbitMQ;
@@ -17,6 +13,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using StackExchange.Redis;
+using System.IdentityModel.Tokens.Jwt;
+using System.Threading.Tasks;
 
 namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
 {
@@ -146,8 +144,6 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
             });
 
             services.AddSingleton<IEventBusSubscriptionsManager, InMemoryEventBusSubscriptionsManager>();
-
-            // TODO add IIntegrationEventHandlers
 
             return services;
         }

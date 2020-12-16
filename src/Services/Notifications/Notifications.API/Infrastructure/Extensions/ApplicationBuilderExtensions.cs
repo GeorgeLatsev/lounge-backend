@@ -1,4 +1,6 @@
 ﻿using Lounge.BuildingBlocks.EventBus.Abstractions;
+using Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandling;
+using Lounge.Services.Notifications.API.IntegrationEvents.Users.Events;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +28,14 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
         {
             var eventBus = app.ApplicationServices.GetRequiredService<IEventBus>();
 
-            // TODO subscribe IIntegrationEventHandler
+            eventBus.Subscribe<ConnectionCreatedIntegrationEvent, ConnectionCreatedIntegrationEventHandler>();
+            eventBus.Subscribe<ConnectionUpdatedIntegrationEvent, ConnectionUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<GroupRoomMemberAddedIntegrationEvent, GroupRoomMemberAddedIntegrationEventHandler>();
+            eventBus.Subscribe<GroupRoomMemberRemovedIntegrationEvent, GroupRoomMemberRemovedIntegrationEventHandler>();
+            eventBus.Subscribe<GroupRoomUpdatedIntegrationEvent, GroupRoomUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<RoomCreatedIntegrationEvent, RoomCreatedIntegrationEventHandler>(); 
+            eventBus.Subscribe<UserSettingsUpdatedIntegrationEvent, UserSettingsUpdatedIntegrationEventHandler>();
+            eventBus.Subscribe<UserUpdatedIntegrationEvent, UserUpdatedIntegrationEventHandler>();
 
             return app;
         }
