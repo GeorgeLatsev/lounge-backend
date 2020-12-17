@@ -66,8 +66,8 @@ namespace Lounge.Services.Users.API.Grpc
             var result = new UserResponse
             {
                 Id = user.Id,
-                Name = user.Name,
-                Tag = user.Tag,
+                Name = user.Name ?? string.Empty,
+                Tag = user.Tag ?? string.Empty,
                 Settings = MapSettings(settings)
             };
 
