@@ -100,7 +100,7 @@ namespace Lounge.Services.Notifications.API.Infrastructure.Extensions
                         var accessToken = context.Request.Query["access_token"];
 
                         var path = context.HttpContext.Request.Path;
-                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/hub"))
+                        if (!string.IsNullOrEmpty(accessToken) && path.StartsWithSegments("/notifications"))
                         {
                             context.Token = accessToken;
                         }
