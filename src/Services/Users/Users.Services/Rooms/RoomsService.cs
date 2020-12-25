@@ -124,10 +124,11 @@ namespace Lounge.Services.Users.Services.Rooms
         {
             var rooms = await _context.Set<Member>()
                 .Where(m => m.UserId == userId)
+                .Include(m => m.Room)
+                .ThenInclude(r => r.Members)
+                .ThenInclude(m => m.User)
                 .Select(m => m.Room)
                 .AsNoTracking()
-                .Include(r => r.Members)
-                .ThenInclude(r => r.User)
                 .ToListAsync();
 
             var models = rooms.Select(RoomModel.MapFrom);
