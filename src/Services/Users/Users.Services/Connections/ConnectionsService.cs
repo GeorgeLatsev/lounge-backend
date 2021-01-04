@@ -91,7 +91,7 @@ namespace Lounge.Services.Users.Services.Connections
         {
             var other = await _context.Users
                 .AsNoTracking()
-                .SingleOrDefaultAsync(u => displayName == $"{u.Name}#{u.Tag}");
+                .SingleOrDefaultAsync(u => displayName == u.Name + "#" + u.Tag);
 
             if (other is null)
             {
