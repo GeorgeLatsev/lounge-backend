@@ -144,7 +144,14 @@ namespace Lounge.Services.Users.Services.Connections
                 return Result.Failure(connectionResult.Errors);
             }
 
-            var connection = connectionResult.Data;
+            var connectionModel = connectionResult.Data;
+            var connection = new Connection 
+            { 
+                UserId = connectionModel.UserId, 
+                OtherId = connectionModel.OtherId, 
+                Notes = connectionModel.Notes, 
+                Relationship = connectionModel.Relationship 
+            };
 
             connection.Notes = model.Notes;
 
@@ -167,7 +174,14 @@ namespace Lounge.Services.Users.Services.Connections
                 return Result.Failure(otherResult.Errors);
             }
 
-            var other = otherResult.Data;
+            var otherModel = otherResult.Data;
+            var other = new Connection
+            {
+                UserId = otherModel.UserId,
+                OtherId = otherModel.OtherId,
+                Notes = otherModel.Notes,
+                Relationship = otherModel.Relationship
+            };
 
             RelationshipEnum? relationshipForOther = null;
 
@@ -230,7 +244,7 @@ namespace Lounge.Services.Users.Services.Connections
                         }
                         else
                         {
-                            other.Relationship = None;
+                            relationshipForOther = None;
                         }
                     }
 
@@ -241,7 +255,7 @@ namespace Lounge.Services.Users.Services.Connections
                 {
                     if (model.Relationship == Blocked)
                     {
-                        other.Relationship = Blocked;
+                        relationshipForOther = Blocked;
                     }
 
                     break;
