@@ -45,9 +45,8 @@ namespace Lounge.Services.Notifications.API
                 .AsImplementedInterfaces()
                 .InstancePerDependency();
 
-            builder.RegisterAssemblyTypes(typeof(ConnectionCreatedIntegrationEventHandler).Assembly)
-                .Where(t => t.IsInstanceOfType(typeof(IIntegrationEventHandler)))
-                .AsClosedTypesOf(typeof(IIntegrationEventHandler));
+            builder.RegisterAssemblyTypes(typeof(UserUpdatedIntegrationEventHandler).GetTypeInfo().Assembly)
+                 .AsClosedTypesOf(typeof(IIntegrationEventHandler<>));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
