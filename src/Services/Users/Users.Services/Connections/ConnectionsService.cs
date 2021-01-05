@@ -80,6 +80,8 @@ namespace Lounge.Services.Users.Services.Connections
                 await _integrationEventService.SaveEventsAndUsersContextChangesAsync(connectionCreatedEvent);
                 await _integrationEventService.PublishThroughEventBusAsync(connectionCreatedEvent);
 
+                _context.Entry(connection).State = EntityState.Detached;
+
                 connection.OtherUser = other;
             }
 
