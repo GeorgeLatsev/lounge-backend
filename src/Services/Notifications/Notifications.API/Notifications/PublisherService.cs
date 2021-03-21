@@ -21,7 +21,7 @@ namespace Lounge.Services.Notifications.API.Notifications
             await _hubContext
                 .Clients
                 .Group(subscription.GetSubscriptionString())
-                .SendCoreAsync(method.GetName(), new object[] { method.GetArgs() });
+                .SendCoreAsync(method.GetName(), method.GetArgs());
         }
 
         public async Task PublishAsync(string connectionId, BaseMethod method)
@@ -29,7 +29,7 @@ namespace Lounge.Services.Notifications.API.Notifications
             await _hubContext
                 .Clients
                 .Client(connectionId)
-                .SendCoreAsync(method.GetName(), new object[] { method.GetArgs() });
+                .SendCoreAsync(method.GetName(), method.GetArgs());
         }
     }
 }
