@@ -1,4 +1,3 @@
-using System.IO;
 using Autofac;
 using HealthChecks.UI.Client;
 using Lounge.Services.Users.API.Grpc;
@@ -11,6 +10,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using System.IO;
 
 namespace Lounge.Services.Users.API
 {
@@ -26,10 +26,11 @@ namespace Lounge.Services.Users.API
         public void ConfigureServices(IServiceCollection services)
         {
             services
-                .AddCustomMvc()
+                .AddCustomMvc(Configuration)
                 .AddCustomDbContext(Configuration)
                 .AddCustomAuthentication(Configuration)
                 .AddCustomIntegrations(Configuration)
+                .AddGrpcClients(Configuration)
                 .AddEventBus(Configuration)
                 .AddHealthChecks(Configuration)
                 .AddGrpc();

@@ -51,6 +51,7 @@ services:
       - IdentityAuthority=${LOUNGE_IDENTITY_AUTHORITY}
       - IdentityAudience=https://api.lounge.com
       - ConnectionString=Server=usersdata;Database=Lounge.Services.UsersDb;User Id=sa;Password=Pass@word
+      - GrpcNotifications=http://notifications-api:81
       - EventBusConnection=rabbitmq
       - EventBusUserName=${RABBITMQ_DEFAULT_USER}
       - EventBusPassword=${RABBITMQ_DEFAULT_PASS}

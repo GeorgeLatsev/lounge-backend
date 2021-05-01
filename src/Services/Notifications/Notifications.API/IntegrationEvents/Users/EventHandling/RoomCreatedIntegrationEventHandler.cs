@@ -26,10 +26,10 @@ namespace Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandlin
 
         public async Task Handle(RoomCreatedIntegrationEvent @event)
         {
-            var roomSubscription = new PrivateRoomSubscription(@event.RoomId);
+            var roomSubscription = new RoomSubscription(@event.RoomId);
 
             var roomType = @event.Members.Count > 2 ? RoomCreatedIntegrationEvent.RoomType.Group : RoomCreatedIntegrationEvent.RoomType.Private;
-            var method = PrivateRoomCreatedMethod.WithArgs(@event.RoomId, (int)roomType, null, @event.OwnerId, @event.Members);
+            var method = RoomCreatedMethod.WithArgs(@event.RoomId, (int)roomType, null, @event.OwnerId, @event.Members);
 
             foreach (var recipient in @event.Members)
             {

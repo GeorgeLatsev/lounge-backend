@@ -1,9 +1,12 @@
 ﻿using Autofac;
+using FluentValidation.AspNetCore;
 using Lounge.BuildingBlocks.EventBus;
 using Lounge.BuildingBlocks.EventBus.Abstractions;
 using Lounge.BuildingBlocks.EventBusRabbitMQ;
 using Lounge.BuildingBlocks.IntegrationEventLogEF;
 using Lounge.BuildingBlocks.IntegrationEventLogEF.Services;
+using Lounge.Services.Users.API.Config;
+using Lounge.Services.Users.API.Grpc.Clients.Notifications;
 using Lounge.Services.Users.API.Infrastructure.Services;
 using Lounge.Services.Users.Infrastructure.Data;
 using Lounge.Services.Users.Infrastructure.IntegrationEvents;
@@ -19,8 +22,6 @@ using System;
 using System.Data.Common;
 using System.IdentityModel.Tokens.Jwt;
 using System.Reflection;
-using FluentValidation.AspNetCore;
-using Lounge.Services.Users.Services.Users;
 
 namespace Lounge.Services.Users.API.Infrastructure.Extensions
 {
@@ -65,37 +66,37 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
 
             services.AddTransient<IUsersIntegrationEventService, UsersIntegrationEventService>();
 
-                services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            services.AddSingleton<IRabbitMQPersistentConnection>(sp =>
+            {
+                var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+
+
+                var factory = new ConnectionFactory()
                 {
-                    var logger = sp.GetRequiredService<ILogger<DefaultRabbitMQPersistentConnection>>();
+                    HostName = configuration["EventBusConnection"],
+                    DispatchConsumersAsync = true
+                };
 
+                if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
+                {
+                    factory.UserName = configuration["EventBusUserName"];
+                }
 
-                    var factory = new ConnectionFactory()
-                    {
-                        HostName = configuration["EventBusConnection"],
-                        DispatchConsumersAsync = true
-                    };
+                if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
+                {
+                    factory.Password = configuration["EventBusPassword"];
+                }
 
-                    if (!string.IsNullOrEmpty(configuration["EventBusUserName"]))
-                    {
-                        factory.UserName = configuration["EventBusUserName"];
-                    }
+                var retryCount = 5;
+                if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
+                {
+                    retryCount = int.Parse(configuration["EventBusRetryCount"]);
+                }
 
-                    if (!string.IsNullOrEmpty(configuration["EventBusPassword"]))
-                    {
-                        factory.Password = configuration["EventBusPassword"];
-                    }
+                return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
+            });
 
-                    var retryCount = 5;
-                    if (!string.IsNullOrEmpty(configuration["EventBusRetryCount"]))
-                    {
-                        retryCount = int.Parse(configuration["EventBusRetryCount"]);
-                    }
-
-                    return new DefaultRabbitMQPersistentConnection(factory, logger, retryCount);
-                });
-
-                return services;
+            return services;
         }
 
         public static IServiceCollection AddCustomAuthentication(this IServiceCollection services, IConfiguration configuration)
@@ -116,6 +117,17 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<IIdentityService, IdentityService>();
+
+            return services;
+        }
+
+        public static IServiceCollection AddGrpcClients(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddTransient<HttpClientAuthorizationDelegatingHandler>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddHttpClient<INotificationsGrpcService, NotificationsGrpcService>()
+                .AddHttpMessageHandler<HttpClientAuthorizationDelegatingHandler>();
 
             return services;
         }
@@ -147,7 +159,7 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
             return services;
         }
 
-        public static IServiceCollection AddCustomMvc(this IServiceCollection services)
+        public static IServiceCollection AddCustomMvc(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddControllers()
                 .AddNewtonsoftJson()
@@ -155,6 +167,9 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
                 {
                     options.RegisterValidatorsFromAssemblyContaining<Startup>();
                 });
+
+            services.AddOptions();
+            services.Configure<UrlsConfig>(configuration);
 
             services.AddCors(options =>
             {
@@ -183,10 +198,10 @@ namespace Lounge.Services.Users.API.Infrastructure.Extensions
 
             hcBuilder
                 .AddRabbitMQ(
-                    $"amqp://{configuration["EventBusConnection"]}", 
-                    name: "users-rabbitmqbus-check", 
+                    $"amqp://{configuration["EventBusConnection"]}",
+                    name: "users-rabbitmqbus-check",
                     tags: new string[] { "rabbitmqbus" });
-            
+
             return services;
         }
     }

@@ -7,7 +7,7 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Lounge.Services.Notifications.API.Infrastructure
+namespace Lounge.Services.Users.API.Infrastructure
 {
     public class HttpClientAuthorizationDelegatingHandler : DelegatingHandler
     {

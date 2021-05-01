@@ -1,4 +1,5 @@
-﻿using Lounge.Services.Users.API.Infrastructure.Services;
+﻿using Lounge.Services.Users.API.Grpc.Clients.Notifications;
+using Lounge.Services.Users.API.Infrastructure.Services;
 using Lounge.Services.Users.Models.RoomEntities;
 using Lounge.Services.Users.Services.Rooms;
 using Lounge.Services.Users.Services.Rooms.Models;
@@ -7,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -20,15 +22,18 @@ namespace Lounge.Services.Users.API.Controllers
         private readonly IRoomsService _roomsService;
         private readonly IGroupRoomsService _groupRoomsService;
         private readonly IIdentityService _identityService;
+        private readonly INotificationsGrpcService _notificationsGrpcService;
 
         public RoomsController(
             IRoomsService roomsService,
             IGroupRoomsService groupRoomsService,
-            IIdentityService identityService)
+            IIdentityService identityService,
+            INotificationsGrpcService notificationsGrpcService)
         {
             _roomsService = roomsService ?? throw new ArgumentNullException(nameof(roomsService));
             _groupRoomsService = groupRoomsService ?? throw new ArgumentNullException(nameof(groupRoomsService));
             _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            _notificationsGrpcService = notificationsGrpcService ?? throw new ArgumentNullException(nameof(notificationsGrpcService));
         }
 
         [HttpPost("@me/rooms")]
@@ -47,7 +52,8 @@ namespace Lounge.Services.Users.API.Controllers
         }
 
         [HttpGet("@me/rooms")]
-        public async Task<ActionResult<ICollection<RoomModel>>> GetRooms()
+        public async Task<ActionResult<ICollection<RoomModel>>> GetRooms(
+            [FromHeader(Name = "notifications-connection-id")][Required] string connectionId)
         {
             var userId = _identityService.GetUserIdentity();
 
@@ -58,6 +64,23 @@ namespace Lounge.Services.Users.API.Controllers
                 return BadRequest(roomsResult.Errors);
             }
 
+            // subscribe
+            var rooms = new List<Grpc.Clients.Notifications.Models.Room>();
+
+            foreach (var roomModel in roomsResult.Data)
+            {
+                var room = new Grpc.Clients.Notifications.Models.Room
+                {
+                    Id = roomModel.Id,
+                    MembersIds = roomModel.Members.Select(m => m.Id).ToArray()
+                };
+
+                rooms.Add(room);
+            }
+
+            await _notificationsGrpcService.SubscribeToRoomsUpdatesAsync(userId, connectionId, rooms.ToArray());
+
+            // return
             return Ok(roomsResult.Data);
         }
 
@@ -112,7 +135,7 @@ namespace Lounge.Services.Users.API.Controllers
         public async Task<ActionResult> AddGroupRoomMember(int dmId, string userToAddId)
         {
             var userId = _identityService.GetUserIdentity();
-                
+
             var result = await _groupRoomsService.AddRecipientAsync(dmId, userToAddId, userId);
 
             if (!result.Succeeded)

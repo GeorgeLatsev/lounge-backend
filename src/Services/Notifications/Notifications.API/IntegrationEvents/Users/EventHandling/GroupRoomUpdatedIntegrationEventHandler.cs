@@ -19,7 +19,7 @@ namespace Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandlin
 
         public async Task Handle(GroupRoomUpdatedIntegrationEvent @event)
         {
-            var roomSubscription = new PrivateRoomSubscription(@event.RoomId);
+            var roomSubscription = new RoomSubscription(@event.RoomId);
             var method = GroupRoomUpdatedMethod.WithArgs(@event.RoomId, @event.Name, @event.OwnerId);
 
             await _publisherService.PublishAsync(roomSubscription, method);

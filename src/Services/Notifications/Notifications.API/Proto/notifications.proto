@@ -1,0 +1,31 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "GrpcNotifcations";
+
+import "google/protobuf/empty.proto";
+
+package NotificationsApi;
+
+service NotificationsGrpc {
+  rpc SubscribeToRoomsUpdates (RoomsUpdatesRequest) returns (google.protobuf.Empty) {}
+  rpc SubscribeToUsersUpdates (ConnectionsUpdatesRequest) returns (google.protobuf.Empty) {}
+  rpc SubscribeToUsersStatusUpdates (ConnectionsUpdatesRequest) returns (google.protobuf.Empty) {}
+}
+
+message RoomsUpdatesRequest {
+    string userId = 1;
+    string connectionId = 2;
+    repeated Room rooms = 3;
+}
+
+message Room {
+    int32 id = 1;
+    repeated string membersIds = 2;
+}
+
+message ConnectionsUpdatesRequest {
+    string userId = 1;
+    string connectionId = 2;
+    repeated string usersIds = 3;
+}
+

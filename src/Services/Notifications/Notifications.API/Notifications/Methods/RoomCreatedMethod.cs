@@ -4,17 +4,17 @@ using System.Linq;
 
 namespace Lounge.Services.Notifications.API.Notifications.Methods
 {
-    public class PrivateRoomCreatedMethod : BaseMethod
+    public class RoomCreatedMethod : BaseMethod
     {
-        private PrivateRoomCreatedMethod(PrivateRoomCreatedMethodPayload data)
+        private RoomCreatedMethod(RoomCreatedMethodPayload data)
             : base(data)
         { }
 
-        public static PrivateRoomCreatedMethod WithArgs(
-            int roomId, int type, string name, string ownerId, 
+        public static RoomCreatedMethod WithArgs(
+            int roomId, int type, string name, string ownerId,
             ICollection<GroupRoomMemberAddedIntegrationEvent.Member> members)
         {
-            var payload = new PrivateRoomCreatedMethodPayload
+            var payload = new RoomCreatedMethodPayload
             {
                 Id = roomId,
                 Type = type,
@@ -30,14 +30,14 @@ namespace Lounge.Services.Notifications.API.Notifications.Methods
                     .ToArray()
             };
 
-            return new PrivateRoomCreatedMethod(payload);
+            return new RoomCreatedMethod(payload);
         }
 
-        public static PrivateRoomCreatedMethod WithArgs(
+        public static RoomCreatedMethod WithArgs(
             int roomId, int type, string name, string ownerId,
             ICollection<RoomCreatedIntegrationEvent.Member> members)
         {
-            var payload = new PrivateRoomCreatedMethodPayload
+            var payload = new RoomCreatedMethodPayload
             {
                 Id = roomId,
                 Type = type,
@@ -53,10 +53,10 @@ namespace Lounge.Services.Notifications.API.Notifications.Methods
                     .ToArray()
             };
 
-            return new PrivateRoomCreatedMethod(payload);
+            return new RoomCreatedMethod(payload);
         }
 
-        private class PrivateRoomCreatedMethodPayload
+        private class RoomCreatedMethodPayload
         {
             public int Id { get; set; }
 

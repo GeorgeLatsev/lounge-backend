@@ -26,7 +26,7 @@ namespace Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandlin
 
         public async Task Handle(GroupRoomMemberAddedIntegrationEvent @event)
         {
-            var roomSubscription = new PrivateRoomSubscription(@event.RoomId);
+            var roomSubscription = new RoomSubscription(@event.RoomId);
             var method = GroupRoomMemberAddedMethod.WithArgs(
                 @event.RoomId, @event.AddedMember.Id, @event.AddedMember.Name, @event.AddedMember.Tag);
 
@@ -37,7 +37,7 @@ namespace Lounge.Services.Notifications.API.IntegrationEvents.Users.EventHandlin
             {
                 await _subscriptionService.SubscribeAsync(connectionId, roomSubscription);
 
-                var createdMethod = PrivateRoomCreatedMethod.WithArgs(
+                var createdMethod = RoomCreatedMethod.WithArgs(
                     @event.RoomId, (int)RoomCreatedIntegrationEvent.RoomType.Group, @event.Room.Name, @event.Room.OwnerId, @event.Room.Members);
 
                 await _publisherService.PublishAsync(connectionId, createdMethod);

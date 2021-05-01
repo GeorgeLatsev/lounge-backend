@@ -21,7 +21,7 @@ namespace Lounge.Services.Users.Services.Rooms.Models
                 return new GroupRoomModel
                 {
                     Id = groupRoom.Id,
-                    Type =  groupRoom.Type,
+                    Type = groupRoom.Type,
                     Name = groupRoom.Name,
                     OwnerId = groupRoom.OwnerId,
                     Members = groupRoom.Members.Select(MemberModel.MapFrom)

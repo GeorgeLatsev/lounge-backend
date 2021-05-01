@@ -1,4 +1,6 @@
-﻿using Lounge.Services.Users.API.Infrastructure.Services;
+﻿using Lounge.Services.Users.API.Grpc.Clients.Notifications;
+using Lounge.Services.Users.API.Infrastructure.Services;
+using Lounge.Services.Users.Models.ConnectionEntities;
 using Lounge.Services.Users.Services.Connections;
 using Lounge.Services.Users.Services.Connections.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -6,6 +8,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,17 +21,22 @@ namespace Lounge.Services.Users.API.Controllers
     {
         private readonly IConnectionsService _connectionsService;
         private readonly IIdentityService _identityService;
+        private readonly INotificationsGrpcService _notificationsGrpcService;
 
         public ConnectionsController(
             IConnectionsService connectionsService,
-            IIdentityService identityService)
+            IIdentityService identityService,
+            INotificationsGrpcService notificationsGrpcService)
         {
             _connectionsService = connectionsService ?? throw new ArgumentNullException(nameof(connectionsService));
             _identityService = identityService ?? throw new ArgumentNullException(nameof(identityService));
+            _notificationsGrpcService = notificationsGrpcService ?? throw new ArgumentNullException(nameof(notificationsGrpcService));
         }
 
         [HttpGet("{displayName}")]
-        public async Task<ActionResult<ConnectionModel>> GetConnection(string displayName)
+        public async Task<ActionResult<ConnectionModel>> GetConnection(
+            string displayName,
+            [FromHeader(Name = "notifications-connection-id")][Required] string connectionId)
         {
             var userId = _identityService.GetUserIdentity();
 
@@ -39,11 +47,17 @@ namespace Lounge.Services.Users.API.Controllers
                 return BadRequest(connectionResult.Errors);
             }
 
+            // subscribe
+            var otherId = connectionResult.Data.OtherId;
+            await _notificationsGrpcService.SubscribeToUsersUpdatesAsync(userId, connectionId, otherId);
+
+            // return
             return Ok(connectionResult.Data);
         }
 
         [HttpGet("@me/connections")]
-        public async Task<ActionResult<ICollection<ConnectionModel>>> GetConnections()
+        public async Task<ActionResult<ICollection<ConnectionModel>>> GetConnections(
+            [FromHeader(Name = "notifications-connection-id")][Required] string connectionId)
         {
             var userId = _identityService.GetUserIdentity();
 
@@ -54,9 +68,24 @@ namespace Lounge.Services.Users.API.Controllers
                 return BadRequest(connectionsResult.Errors);
             }
 
+            // subscribe
+            var usersIds = connectionsResult.Data
+                .Select(ur => ur.OtherId)
+                .ToArray();
+
+            await _notificationsGrpcService.SubscribeToUsersUpdatesAsync(userId, connectionId, usersIds);
+
+            var friendsIds = connectionsResult.Data
+                .Where(ur => ur.Relationship == RelationshipEnum.Friend)
+                .Select(ur => ur.OtherId)
+                .ToArray();
+
+            await _notificationsGrpcService.SubscribeToUsersStatusUpdatesAsync(userId, connectionId, friendsIds);
+
+            // return
             return Ok(connectionsResult.Data);
         }
-        
+
         [HttpPatch("@me/connections/{otherId}")]
         public async Task<ActionResult> UpdateConnection(string otherId, [FromBody] JsonPatchDocument<ConnectionUpdateModel> patchDoc)
         {
