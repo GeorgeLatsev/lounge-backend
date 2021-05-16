@@ -9,16 +9,32 @@ services:
       - "5340:80"
 
   noticationsdata:
-    image: redis:6.0.9-alpine
+    image: redis:6.2.2-alpine
     volumes:
       - lounge-noticationsdata:/data
+    privileged: true
+    command:
+      - /bin/sh
+      - -c
+      - | 
+        sysctl -w vm.overcommit_memory=1 && redis-server
+    sysctls:
+      - net.core.somaxconn=65535
     ports:
       - "6380:6379"
 
   signalrbackplane:
-    image: redis:6.0.9-alpine
+    image: redis:6.2.2-alpine
     volumes:
       - lounge-signalrbackplane:/data
+    privileged: true
+    command:
+      - /bin/sh
+      - -c
+      - | 
+        sysctl -w vm.overcommit_memory=1 && redis-server
+    sysctls:
+      - net.core.somaxconn=65535
     ports:
       - "6379:6379"
 
